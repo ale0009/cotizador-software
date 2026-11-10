@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cómo se hizo · ¿Cuánto cuesta tu software?</title>
+  <meta name="description" content="El proceso detrás del cotizador: optimización de presupuesto con PuLP, nómina colombiana, Monte Carlo con PERT, decisiones de diseño y limitaciones.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A090A'/%3E%3Ctext x='16' y='24' font-size='22' text-anchor='middle' fill='%23CB433E' font-family='sans-serif'%3E%24%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/estilo.css">
+  <script>
+    try { const t = localStorage.getItem('cotizador-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="cabecera trama">
+    <span class="kanji" aria-hidden="true">過程</span>
+    <div class="marca">
+      <h1>Cómo se hizo</h1>
+      <p>De un trabajo de investigación de operaciones a una herramienta que responde con un rango.</p>
+    </div>
+    <div class="acciones">
+      <button type="button" class="boton" id="tema" aria-label="Cambiar tema claro u oscuro">Tema</button>
+      <a class="boton primario" href="../">Volver a la herramienta</a>
+    </div>
+  </header>
+
+  <main class="lectura">
+    <section aria-labelledby="h-problema">
+      <h2 id="h-problema"><span class="paso-num">1</span> El problema</h2>
+      <p>«¿Cuánto cuesta hacer mi app?» suele responderse con un solo número. Ese número esconde dos cosas: cuánto le cuesta de verdad a una empresa colombiana cada hora de una persona (no es el salario dividido entre 160) y cuánta incertidumbre hay en las horas. Esta herramienta hace visibles las dos.</p>
+    </section>
+
+    <section aria-labelledby="h-origen">
+      <h2 id="h-origen"><span class="paso-num">2</span> De dónde sale</h2>
+      <h3>Optimización de presupuesto para un e-commerce (investigación de operaciones)</h3>
+      <p>El punto de partida es un trabajo académico en equipo de la Universidad ECCI, hecho con David Rincón «Kuronoma», reimplementado por Mario como proyecto abierto. Usa programación lineal entera mixta (MIP: un modelo de optimización con variables enteras, aquí personas por rol, y binarias, aquí qué tecnología elegir) resuelto con PuLP y el solver CBC. Minimiza el costo con un presupuesto tope, un tamaño máximo de equipo, capacidad de trabajo, esfuerzo de QA de al menos el 20 % del desarrollo y una ruta crítica de siete fases secuenciales.</p>
+      <div class="tabla-scroll">
+        <table class="cifras">
+          <caption class="solo-lector">Resultados del modelo de optimización según su README</caption>
+          <thead><tr><th scope="col">Caso</th><th scope="col">Estado</th><th scope="col">Personas</th><th scope="col">Semanas</th><th scope="col">Costo optimizado (COP)</th><th scope="col">Presupuesto (COP)</th></tr></thead>
+          <tbody>
+            <tr><td>Pequeña</td><td>Optimal</td><td class="num">3 de 4</td><td class="num">9</td><td class="num">55.506.000</td><td class="num">120.000.000</td></tr>
+            <tr><td>Mediana</td><td>Optimal</td><td class="num">6 de 7</td><td class="num">16</td><td class="num">207.792.000</td><td class="num">250.000.000</td></tr>
+            <tr><td>Grande</td><td>Optimal</td><td class="num">6 de 12</td><td class="num">24</td><td class="num">311.088.000</td><td class="num">400.000.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ayuda">Fuente: README de <a href="https://github.com/ale0009/optimizacion-presupuesto-ecommerce">ale0009/optimizacion-presupuesto-ecommerce</a> (sección «Resultados»). Son salidas medidas del modelo con supuestos sintéticos, no cotizaciones.</p>
+      <p>De ese repositorio vienen la fórmula del costo por hora, los salarios de referencia por rol y las horas probables de siete piezas de la herramienta (caso «pequeña»: usuarios 90 h, catálogo 160 h, carrito 100 h, pagos 100 h, panel 110 h, Ley 1581 64 h y facturación electrónica 56 h).</p>
+
+      <h3>La nómina colombiana</h3>
+      <p>Contratar a alguien cuesta más que su salario. El factor prestacional (≈52 %, ilustrativo) agrupa prima, cesantías e intereses, vacaciones, salud, pensión, ARL y parafiscales. Si la persona gana menos de dos salarios mínimos, además se paga auxilio de transporte.</p>
+      <p class="formula">costo_hora = (salario × (1 + 0,52) + auxilio si salario &lt; 2 SMMLV) / 160 h<br>Backend 5.600.000 → 5.600.000 × 1,52 / 160 = 53.200 COP/h</p>
+      <p class="ayuda">Valores de referencia de los dos repositorios: SMMLV 1.423.500, auxilio 200.000, 40 h × 4 semanas. Cambian cada año: en la herramienta todos son editables.</p>
+
+      <h3>El motor de eiran</h3>
+      <p>eiran es un asistente propio de Mario para evaluar la viabilidad de proyectos. De su módulo de presupuesto se portaron a JavaScript tres piezas: <code>costo_laboral.py</code> (costo por hora para la empresa), <code>riesgo.py</code> (Monte Carlo con PERT y percentiles) y <code>cascade_engine.py</code> (contingencia, margen comercial, niveles de precio, capacidad y conversión de moneda). Las pruebas (<code>node --test</code>) comparan el resultado JavaScript con valores calculados ejecutando el Python original: el ejemplo precargado da el mismo P50, P80 y P90.</p>
+    </section>
+
+    <section aria-labelledby="h-metodo">
+      <h2 id="h-metodo"><span class="paso-num">3</span> Por qué un rango y no un número</h2>
+      <p>Cada pieza tiene tres estimaciones: optimista (a), probable (m) y pesimista (b). La distribución Beta-PERT las convierte en una curva que se concentra cerca de la probable; su media es (a + 4m + b) / 6. El rango es asimétrico a propósito: en software las tareas se alargan más de lo que se acortan.</p>
+      <figure>
+        <svg id="g-pert" viewBox="0 0 600 240" role="img" aria-labelledby="g-pert-t g-pert-d"><title id="g-pert-t">Curva PERT y triangular de una pieza</title><desc id="g-pert-d">Curva de probabilidad de las horas de la pieza de registro e inicio de sesión.</desc></svg>
+        <figcaption id="c-pert">Una pieza, tres estimaciones, una curva.</figcaption>
+      </figure>
+      <p>Monte Carlo significa repetir el cálculo miles de veces sorteando las horas de cada pieza dentro de su curva y sumar. Con 5000 tiradas y semilla fija (42) el resultado es reproducible: el mismo proyecto da siempre el mismo rango. P80 se lee así: «en el 80 % de los escenarios simulados el proyecto cuesta esto o menos».</p>
+      <figure>
+        <svg id="g-histo" class="histo" viewBox="0 0 600 230" role="img" aria-labelledby="g-histo-t g-histo-d"><title id="g-histo-t">Distribución del costo del ejemplo</title><desc id="g-histo-d">Histograma del costo simulado del ejemplo precargado.</desc></svg>
+        <figcaption id="c-histo">Costo simulado del ejemplo (tienda en línea pequeña).</figcaption>
+      </figure>
+      <h3>Sensibilidad a la contingencia</h3>
+      <p>La contingencia es el colchón que se suma al presupuesto calculado con las horas probables. ¿Cuánto colchón hace falta? La curva muestra la probabilidad de no pasarse según el porcentaje de contingencia, para el mismo ejemplo.</p>
+      <figure>
+        <svg id="g-sens" viewBox="0 0 600 260" role="img" aria-labelledby="g-sens-t g-sens-d"><title id="g-sens-t">Probabilidad de no pasarse según la contingencia</title><desc id="g-sens-d">Curva creciente de probabilidad frente al porcentaje de contingencia.</desc></svg>
+        <figcaption id="c-sens">Calculado aquí con las muestras del ejemplo.</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="h-diseno">
+      <h2 id="h-diseno"><span class="paso-num">4</span> Decisiones de diseño</h2>
+      <ul>
+        <li><strong>El P80 es el titular.</strong> El P50 es una moneda al aire; el P80 es lo que un equipo prudente promete. El rango P50–P90 va justo debajo.</li>
+        <li><strong>Precio = costo simulado × (1 + margen).</strong> eiran reporta el riesgo sobre el costo sin margen; aquí se aplica el margen a cada percentil porque la pregunta del visitante es cuánto pagaría (calculado aquí).</li>
+        <li><strong>Hora promedio del equipo.</strong> Cada pieza se reparte entre los roles según cuántas personas hay de cada uno. Es una simplificación: no distingue que un login lo hace sobre todo backend.</li>
+        <li><strong>Mismos números que el original.</strong> Se portó el generador Mersenne Twister de Python y sus algoritmos de muestreo, para que la herramienta y eiran den el mismo resultado con la misma semilla.</li>
+        <li><strong>Barras rojas = escenarios que se pasan del presupuesto.</strong> El color frío marca lo que cabe; el rojo, lo que no.</li>
+      </ul>
+      <h3>Paleta</h3>
+      <div class="paleta">
+        <div class="muestra"><span style="background:#F9F9F7"></span><div>Papel #F9F9F7</div></div>
+        <div class="muestra"><span style="background:#0A090A"></span><div>Tinta #0A090A</div></div>
+        <div class="muestra"><span style="background:#CB433E"></span><div>Acento #CB433E</div></div>
+        <div class="muestra"><span style="background:#438FB8"></span><div>Cian #438FB8</div></div>
+        <div class="muestra"><span style="background:#141C33"></span><div>Noche #141C33</div></div>
+        <div class="muestra"><span style="background:#F2ECE0"></span><div>Washi #F2ECE0</div></div>
+        <div class="muestra"><span style="background:#BA3937"></span><div>Bermellón #BA3937</div></div>
+      </div>
+      <h3>Bocetos</h3>
+      <div class="bocetos">
+        <figure>
+          <svg viewBox="0 0 300 180" role="img" aria-labelledby="b1"><title id="b1">Versión descartada: un solo número</title>
+            <rect x="8" y="8" width="284" height="164" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="24" y="26" width="120" height="12" fill="currentColor" opacity=".25"/>
+            <text x="150" y="104" text-anchor="middle" style="font:28px var(--titulo)">$ 37 M</text>
+            <line x1="40" y1="140" x2="260" y2="140" stroke="#CB433E" stroke-width="3"/>
+            <line x1="40" y1="30" x2="260" y2="150" stroke="#CB433E" stroke-width="3" opacity=".6"/>
+          </svg>
+          <figcaption>v1, descartada: un número único da falsa precisión.</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 300 180" role="img" aria-labelledby="b2"><title id="b2">Versión elegida: piezas, equipo y rango</title>
+            <rect x="8" y="8" width="284" height="164" fill="none" stroke="currentColor" stroke-width="3"/>
+            <g fill="currentColor" opacity=".8"><rect x="20" y="22" width="34" height="20"/><rect x="58" y="22" width="34" height="20" opacity=".35"/><rect x="96" y="22" width="34" height="20"/><rect x="20" y="46" width="34" height="20" opacity=".35"/><rect x="58" y="46" width="34" height="20"/><rect x="96" y="46" width="34" height="20" opacity=".35"/></g>
+            <g fill="currentColor" opacity=".3"><rect x="20" y="84" width="110" height="8"/><rect x="20" y="100" width="110" height="8"/><rect x="20" y="116" width="110" height="8"/></g>
+            <rect x="146" y="22" width="132" height="136" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="156" y="32" width="80" height="14" fill="currentColor"/>
+            <g fill="#438FB8"><rect x="158" y="128" width="9" height="16"/><rect x="169" y="112" width="9" height="32"/><rect x="180" y="98" width="9" height="46"/><rect x="191" y="96" width="9" height="48"/><rect x="202" y="108" width="9" height="36"/></g>
+            <g fill="#CB433E"><rect x="213" y="122" width="9" height="22"/><rect x="224" y="134" width="9" height="10"/></g>
+          </svg>
+          <figcaption>v2, elegida: piezas y equipo a la izquierda; rango e histograma a la derecha.</figcaption>
+        </figure>
+      </div>
+      <p>Tipografía: Dela Gothic One para títulos (viñeta de cómic), IBM Plex Sans para el texto e IBM Plex Mono para las cifras. Toques de videojuego: el medidor de probabilidad, el nivel de riesgo de plazo y el sello «×5000» de tiradas.</p>
+    </section>
+
+    <section aria-labelledby="h-limites">
+      <h2 id="h-limites"><span class="paso-num">5</span> Limitaciones</h2>
+      <ul>
+        <li><strong>No es una cotización formal.</strong> Son valores de referencia a verificar: SMMLV, auxilio, factor prestacional y jornada cambian; no es asesoría laboral ni tributaria.</li>
+        <li>Las horas de las piezas marcadas «SP» son supuestos propios de esta herramienta; las «EC» vienen del caso «pequeña» del modelo de optimización, que también son supuestos sintéticos.</li>
+        <li>Las piezas se simulan como independientes. En la realidad, si una se retrasa, otras suelen retrasarse también: el rango real tiende a ser más ancho.</li>
+        <li>Plazo = horas / (personas × horas productivas por semana). No modela dependencias entre piezas ni que unas personas esperen a otras.</li>
+        <li>Las tasas y los salarios son fijos durante la simulación; solo varían las horas.</li>
+      </ul>
+      <h3>Fe de erratas de las fuentes</h3>
+      <ul>
+        <li>En <code>cascade_engine.py</code> de eiran, la descripción del nivel «Recomendado» dice «15% de contingencia» como texto fijo, aunque la contingencia sea otra. Aquí los niveles muestran solo el precio, calculado con la contingencia elegida.</li>
+        <li>El costo por hora usa 160 horas pagadas al mes (40 × 4), pero el plazo usa 35 horas productivas por semana (valor por defecto de eiran). No es un error: se paga la jornada completa y se produce menos. Lo aclaramos porque parece una contradicción.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-fuentes">
+      <h2 id="h-fuentes"><span class="paso-num">6</span> Fuentes</h2>
+      <ol>
+        <li>Puerta, M. y Rincón, D. — <a href="https://github.com/ale0009/optimizacion-presupuesto-ecommerce">optimizacion-presupuesto-ecommerce</a>: README (resultados), <code>datos/parametros.yaml</code> y <code>src/optimizacion_ecommerce/modelo.py</code> (<code>costo_hora</code>).</li>
+        <li>eiran (asistente propio de Mario, repositorio privado): <code>app/budget/costo_laboral.py</code>, <code>riesgo.py</code> y <code>cascade_engine.py</code>.</li>
+        <li>Malcolm, D. G., Roseboom, J. H., Clark, C. E. y Fazar, W. (1959). Application of a technique for research and development program evaluation. <em>Operations Research</em>, 7(5), 646–669 (origen de PERT).</li>
+        <li>Documentación de Python, módulo <code>random</code>: Mersenne Twister, <code>betavariate</code> y <code>triangular</code>.</li>
+        <li>Ley 1581 de 2012 (protección de datos personales, Colombia), citada como pieza del catálogo.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="h-creditos">
+      <h2 id="h-creditos"><span class="paso-num">7</span> Créditos</h2>
+      <p>Trabajo de investigación de operaciones hecho con <a href="https://www.linkedin.com/in/davidalexanderrinconcorredorkuronoma/">David Rincón «Kuronoma»</a>. Motor de cálculo derivado de eiran, el asistente propio de Mario. Herramienta y diseño: Mario Puerta.</p>
+    </section>
+
+    <a class="volver" href="../">Volver a la herramienta: arma tu proyecto</a>
+  </main>
+
+  <footer class="pie trama">
+    <span class="creditos">Mario Puerta × <a href="https://www.linkedin.com/in/davidalexanderrinconcorredorkuronoma/" rel="noopener">David Rincón «Kuronoma»</a></span>
+    <a href="https://github.com/ale0009" rel="noopener">github.com/ale0009</a>
+    <a href="#">Portafolio</a>
+    <a href="../">La herramienta</a>
+  </footer>
+  <script type="module" src="../js/proceso.js"></script>
+</body>
+</html>

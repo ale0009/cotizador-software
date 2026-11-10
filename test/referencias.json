@@ -1,0 +1,922 @@
+{
+ "costo_hora_empresa": [
+  {
+   "salario": 5600000,
+   "opciones": {},
+   "esperado": 53200.0
+  },
+  {
+   "salario": 2000000,
+   "opciones": {},
+   "esperado": 20250.0
+  },
+  {
+   "salario": 2846999,
+   "opciones": {},
+   "esperado": 28296.49
+  },
+  {
+   "salario": 2847000,
+   "opciones": {},
+   "esperado": 27046.5
+  },
+  {
+   "salario": 1423500,
+   "opciones": {},
+   "esperado": 14773.25
+  },
+  {
+   "salario": 7500000,
+   "opciones": {},
+   "esperado": 71250.0
+  },
+  {
+   "salario": 3900000,
+   "opciones": {},
+   "esperado": 37050.0
+  },
+  {
+   "salario": 2500000,
+   "opciones": {
+    "factorPrestacional": 0.6,
+    "smmlv": 1300000,
+    "auxilioTransporte": 162000,
+    "limiteAuxilioSmmlv": 2,
+    "horasSemana": 42,
+    "semanasMes": 4.33
+   },
+   "esperado": 22885.74
+  }
+ ],
+ "costo_hora_modelo": {
+  "general": {
+   "smmlv": 1423500,
+   "auxilio_transporte": 200000,
+   "limite_auxilio_smmlv": 2,
+   "factor_prestacional": 0.52,
+   "horas_semana": 40
+  },
+  "casos": [
+   {
+    "salario": 4800000,
+    "esperado": 45600.0
+   },
+   {
+    "salario": 5600000,
+    "esperado": 53200.0
+   },
+   {
+    "salario": 3900000,
+    "esperado": 37050.0
+   },
+   {
+    "salario": 4500000,
+    "esperado": 42750.0
+   },
+   {
+    "salario": 7500000,
+    "esperado": 71250.0
+   },
+   {
+    "salario": 6100000,
+    "esperado": 57950.0
+   },
+   {
+    "salario": 2500000,
+    "esperado": 25000.0
+   }
+  ]
+ },
+ "percentil": {
+  "valores": [
+   1.0,
+   1.5,
+   2.6,
+   3.0,
+   4.0,
+   5.3,
+   9.0
+  ],
+  "casos": [
+   {
+    "p": 0,
+    "esperado": 1.0
+   },
+   {
+    "p": 10,
+    "esperado": 1.3
+   },
+   {
+    "p": 50,
+    "esperado": 3.0
+   },
+   {
+    "p": 80,
+    "esperado": 5.039999999999999
+   },
+   {
+    "p": 90,
+    "esperado": 6.780000000000001
+   },
+   {
+    "p": 100,
+    "esperado": 9.0
+   }
+  ]
+ },
+ "rango_tarea": [
+  {
+   "tarea": {
+    "nombre": "solo horas",
+    "horas": 100
+   },
+   "esperado": [
+    80.0,
+    100.0,
+    150.0,
+    "porcentaje"
+   ]
+  },
+  {
+   "tarea": {
+    "nombre": "a y b",
+    "horas": 50,
+    "horas_optimista": 30,
+    "horas_pesimista": 90
+   },
+   "esperado": [
+    30.0,
+    50.0,
+    90.0,
+    "edt"
+   ]
+  },
+  {
+   "tarea": {
+    "nombre": "solo b",
+    "probable": 40,
+    "pesimista": 70
+   },
+   "esperado": [
+    32.0,
+    40.0,
+    70.0,
+    "edt"
+   ]
+  }
+ ],
+ "simular": [
+  {
+   "nombre": "pert básico",
+   "tareas": [
+    [
+     "login",
+     72,
+     90,
+     135,
+     30000.0
+    ],
+    [
+     "pagos",
+     80,
+     100,
+     150,
+     45000.0
+    ],
+    [
+     "panel",
+     88,
+     110,
+     165,
+     38000.0
+    ]
+   ],
+   "capacidad": 105.0,
+   "kw": {
+    "costos_fijos": 2000000.0,
+    "presupuesto_referencia": 13000000.0,
+    "horas_referencia": 350.0
+   },
+   "config": {},
+   "esperado": {
+    "horas": {
+     "p50": 313.9,
+     "p80": 333.1,
+     "p90": 344.2,
+     "media": 314.9,
+     "minimo": 256.3,
+     "maximo": 403.1
+    },
+    "costo": {
+     "p50": 13906690.83,
+     "p80": 14648961.48,
+     "p90": 15077072.11,
+     "media": 13945818.09,
+     "minimo": 11683098.18,
+     "maximo": 17220948.87
+    },
+    "semanas": {
+     "p50": 3.0,
+     "p80": 3.2,
+     "p90": 3.3,
+     "media": 3.0,
+     "minimo": 2.4,
+     "maximo": 3.8
+    },
+    "horas_probables": 300,
+    "tareas_simuladas": 3,
+    "presupuesto_con_contingencia": 13000000.0,
+    "prob_dentro_presupuesto": 0.131,
+    "horas_con_contingencia": 350.0,
+    "prob_dentro_horas": 0.935
+   }
+  },
+  {
+   "nombre": "triangular",
+   "tareas": [
+    [
+     "api",
+     60,
+     80,
+     140,
+     52000.0
+    ],
+    [
+     "móvil",
+     200,
+     280,
+     480,
+     47000.0
+    ]
+   ],
+   "capacidad": 70.0,
+   "kw": {
+    "presupuesto_referencia": 20000000.0
+   },
+   "config": {
+    "distribucion": "triangular",
+    "iteraciones": 3000,
+    "semilla": 7
+   },
+   "esperado": {
+    "horas": {
+     "p50": 404.1,
+     "p80": 470.8,
+     "p90": 499.6,
+     "media": 412.6,
+     "minimo": 280.9,
+     "maximo": 592.6
+    },
+    "costo": {
+     "p50": 19463507.93,
+     "p80": 22607127.28,
+     "p90": 23968405.67,
+     "media": 19854524.62,
+     "minimo": 13555309.75,
+     "maximo": 28471129.41
+    },
+    "semanas": {
+     "p50": 5.8,
+     "p80": 6.7,
+     "p90": 7.1,
+     "media": 5.9,
+     "minimo": 4.0,
+     "maximo": 8.5
+    },
+    "horas_probables": 360,
+    "tareas_simuladas": 2,
+    "presupuesto_con_contingencia": 20000000.0,
+    "prob_dentro_presupuesto": 0.56
+   }
+  },
+  {
+   "nombre": "bordes (a = m, a = b)",
+   "tareas": [
+    [
+     "fija",
+     40,
+     40,
+     40,
+     20000.0
+    ],
+    [
+     "sin optimista",
+     50,
+     50,
+     90,
+     25000.0
+    ],
+    [
+     "normal",
+     10,
+     20,
+     60,
+     25000.0
+    ]
+   ],
+   "capacidad": 35.0,
+   "kw": {},
+   "config": {
+    "iteraciones": 1000,
+    "semilla": 2026
+   },
+   "esperado": {
+    "horas": {
+     "p50": 121.6,
+     "p80": 130.8,
+     "p90": 136.2,
+     "media": 122.1,
+     "minimo": 102.8,
+     "maximo": 163.8
+    },
+    "costo": {
+     "p50": 2839285.96,
+     "p80": 3070259.82,
+     "p90": 3205548.35,
+     "media": 2852974.79,
+     "minimo": 2369685.5,
+     "maximo": 3894735.89
+    },
+    "semanas": {
+     "p50": 3.5,
+     "p80": 3.7,
+     "p90": 3.9,
+     "media": 3.5,
+     "minimo": 2.9,
+     "maximo": 4.7
+    },
+    "horas_probables": 110,
+    "tareas_simuladas": 3
+   }
+  },
+  {
+   "nombre": "semilla grande",
+   "tareas": [
+    [
+     "x",
+     1,
+     2,
+     30,
+     1000.0
+    ]
+   ],
+   "capacidad": 10.0,
+   "kw": {
+    "horas_referencia": 5.0
+   },
+   "config": {
+    "iteraciones": 500,
+    "semilla": 1099511627783
+   },
+   "esperado": {
+    "horas": {
+     "p50": 5.7,
+     "p80": 10.5,
+     "p90": 13.3,
+     "media": 6.8,
+     "minimo": 1.0,
+     "maximo": 22.7
+    },
+    "costo": {
+     "p50": 5660.11,
+     "p80": 10455.06,
+     "p90": 13256.65,
+     "media": 6837.39,
+     "minimo": 1002.02,
+     "maximo": 22695.14
+    },
+    "semanas": {
+     "p50": 0.6,
+     "p80": 1.0,
+     "p90": 1.3,
+     "media": 0.7,
+     "minimo": 0.1,
+     "maximo": 2.3
+    },
+    "horas_probables": 2,
+    "tareas_simuladas": 1,
+    "horas_con_contingencia": 5.0,
+    "prob_dentro_horas": 0.454
+   }
+  }
+ ],
+ "convertir_moneda": [
+  {
+   "args": [
+    1000000,
+    "COP",
+    "USD",
+    4200,
+    1.08
+   ],
+   "esperado": 238.0952380952381
+  },
+  {
+   "args": [
+    250,
+    "USD",
+    "COP",
+    3950.5,
+    1.08
+   ],
+   "esperado": 987625.0
+  },
+  {
+   "args": [
+    100,
+    "EUR",
+    "COP",
+    4200,
+    1.1
+   ],
+   "esperado": 462000.00000000006
+  },
+  {
+   "args": [
+    5000000,
+    "COP",
+    "EUR",
+    4100,
+    1.07
+   ],
+   "esperado": 1139.731023478459
+  },
+  {
+   "args": [
+    77,
+    "USD",
+    "USD",
+    4200,
+    1.08
+   ],
+   "esperado": 77.0
+  }
+ ],
+ "cascada": [
+  {
+   "doc": {
+    "moneda": "COP",
+    "usdCop": 4200,
+    "eurUsd": 1.08,
+    "contingencia": 0.15,
+    "margen": 0.2,
+    "personas": 3,
+    "horasSemana": 35,
+    "umbralSemanas": 10,
+    "roles": [
+     {
+      "id": "back",
+      "etiqueta": "Backend",
+      "tarifaHora": 53200.0,
+      "moneda": "COP"
+     },
+     {
+      "id": "front",
+      "etiqueta": "Frontend",
+      "tarifaHora": 45600.0,
+      "moneda": "COP"
+     },
+     {
+      "id": "ext",
+      "etiqueta": "Consultor",
+      "tarifaHora": 40.0,
+      "moneda": "USD"
+     }
+    ],
+    "tareas": [
+     {
+      "id": "t1",
+      "nombre": "Login",
+      "horas": 90,
+      "rol": "back"
+     },
+     {
+      "id": "t2",
+      "nombre": "UI",
+      "horas": 63.333333,
+      "rol": "front"
+     },
+     {
+      "id": "t3",
+      "nombre": "Asesoría",
+      "horas": 12.5,
+      "rol": "ext"
+     },
+     {
+      "id": "t4",
+      "nombre": "Apagada",
+      "horas": 40,
+      "rol": "back",
+      "activa": false
+     }
+    ],
+    "costosNoLaborales": [
+     {
+      "monto": 1200000,
+      "moneda": "COP"
+     },
+     {
+      "monto": 99,
+      "moneda": "USD"
+     }
+    ]
+   },
+   "esperado": {
+    "totalHoras": 165.83,
+    "contingenciaHoras": 24.87,
+    "horasPlaneadas": 190.7,
+    "manoObra": 9775848.0,
+    "contingenciaCosto": 1466377.2,
+    "noLaboral": 1615800.0,
+    "subtotal": 12858025.2,
+    "margenCosto": 2571605.04,
+    "precio": 15429630.24,
+    "equivalente": {
+     "usd": 3673.72,
+     "cop": 15429630.24
+    },
+    "roles": [
+     {
+      "id": "back",
+      "horas": 90.0,
+      "tarifaHora": 53200.0,
+      "costo": 4788000.0,
+      "pctHoras": 54.3,
+      "pctCosto": 49.0
+     },
+     {
+      "id": "front",
+      "horas": 63.33,
+      "tarifaHora": 45600.0,
+      "costo": 2887848.0,
+      "pctHoras": 38.2,
+      "pctCosto": 29.5
+     },
+     {
+      "id": "ext",
+      "horas": 12.5,
+      "tarifaHora": 168000.0,
+      "costo": 2100000.0,
+      "pctHoras": 7.5,
+      "pctCosto": 21.5
+     }
+    ],
+    "niveles": {
+     "minimo": {
+      "precio": 12369232.8,
+      "usd": 2945.06,
+      "cop": 12369232.8
+     },
+     "recomendado": {
+      "precio": 15429630.24,
+      "usd": 3673.72,
+      "cop": 15429630.24
+     },
+     "premium": {
+      "precio": 20058519.31,
+      "usd": 4775.84,
+      "cop": 20058519.31
+     }
+    },
+    "capacidad": {
+     "capacidadSemanal": 105.0,
+     "semanas": 1.8,
+     "diasHabiles": 9,
+     "riesgoSobretiempo": 0.18,
+     "nivel": "BAJO"
+    }
+   }
+  },
+  {
+   "doc": {
+    "moneda": "USD",
+    "usdCop": 3987.65,
+    "eurUsd": 1.08,
+    "contingencia": 0.3,
+    "margen": 0.35,
+    "personas": 1,
+    "horasSemana": 40,
+    "umbralSemanas": 6,
+    "roles": [
+     {
+      "id": "dev",
+      "etiqueta": "Dev",
+      "tarifaHora": 38000.0,
+      "moneda": "COP"
+     }
+    ],
+    "tareas": [
+     {
+      "id": "a",
+      "nombre": "A",
+      "horas": 120,
+      "rol": "dev"
+     },
+     {
+      "id": "b",
+      "nombre": "B",
+      "horas": 77.7,
+      "rol": "dev"
+     }
+    ],
+    "costosNoLaborales": []
+   },
+   "esperado": {
+    "totalHoras": 197.7,
+    "contingenciaHoras": 59.31,
+    "horasPlaneadas": 257.01,
+    "manoObra": 1883.97,
+    "contingenciaCosto": 565.19,
+    "noLaboral": 0.0,
+    "subtotal": 2449.16,
+    "margenCosto": 857.21,
+    "precio": 3306.37,
+    "equivalente": {
+     "usd": 3306.37,
+     "cop": 13184646.33
+    },
+    "roles": [
+     {
+      "id": "dev",
+      "horas": 197.7,
+      "tarifaHora": 9.53,
+      "costo": 1883.97,
+      "pctHoras": 100.0,
+      "pctCosto": 100.0
+     }
+    ],
+    "niveles": {
+     "minimo": {
+      "precio": 2213.66,
+      "usd": 2213.66,
+      "cop": 8827301.3
+     },
+     "recomendado": {
+      "precio": 3306.37,
+      "usd": 3306.37,
+      "cop": 13184646.33
+     },
+     "premium": {
+      "precio": 4298.28,
+      "usd": 4298.28,
+      "cop": 17140036.24
+     }
+    },
+    "capacidad": {
+     "capacidadSemanal": 40.0,
+     "semanas": 6.4,
+     "diasHabiles": 32,
+     "riesgoSobretiempo": 1.07,
+     "nivel": "ALTO"
+    }
+   }
+  },
+  {
+   "doc": {
+    "moneda": "EUR",
+    "usdCop": 4200,
+    "eurUsd": 1.1,
+    "contingencia": 0.0,
+    "margen": 0.1,
+    "personas": 2,
+    "horasSemana": 30,
+    "umbralSemanas": 20,
+    "roles": [
+     {
+      "id": "dev",
+      "etiqueta": "Dev",
+      "tarifaHora": 30.0,
+      "moneda": "EUR"
+     }
+    ],
+    "tareas": [
+     {
+      "id": "a",
+      "nombre": "A",
+      "horas": 300,
+      "rol": "dev"
+     }
+    ],
+    "costosNoLaborales": [
+     {
+      "monto": 500,
+      "moneda": "EUR"
+     }
+    ]
+   },
+   "esperado": {
+    "totalHoras": 300.0,
+    "contingenciaHoras": 0.0,
+    "horasPlaneadas": 300.0,
+    "manoObra": 9000.0,
+    "contingenciaCosto": 0.0,
+    "noLaboral": 500.0,
+    "subtotal": 9500.0,
+    "margenCosto": 950.0,
+    "precio": 10450.0,
+    "equivalente": {
+     "usd": 11495.0,
+     "cop": 48279000.0
+    },
+    "roles": [
+     {
+      "id": "dev",
+      "horas": 300.0,
+      "tarifaHora": 30.0,
+      "costo": 9000.0,
+      "pctHoras": 100.0,
+      "pctCosto": 100.0
+     }
+    ],
+    "niveles": {
+     "minimo": {
+      "precio": 9950.0,
+      "usd": 10945.0,
+      "cop": 45969000.0
+     },
+     "recomendado": {
+      "precio": 10450.0,
+      "usd": 11495.0,
+      "cop": 48279000.0
+     },
+     "premium": {
+      "precio": 13585.0,
+      "usd": 14943.5,
+      "cop": 62762700.0
+     }
+    },
+    "capacidad": {
+     "capacidadSemanal": 60.0,
+     "semanas": 5.0,
+     "diasHabiles": 25,
+     "riesgoSobretiempo": 0.25,
+     "nivel": "BAJO"
+    }
+   }
+  }
+ ],
+ "ejemplo": {
+  "piezas": [
+   [
+    "login",
+    72,
+    90,
+    135
+   ],
+   [
+    "catalogo",
+    128,
+    160,
+    240
+   ],
+   [
+    "carrito",
+    80,
+    100,
+    150
+   ],
+   [
+    "pagos",
+    80,
+    100,
+    150
+   ],
+   [
+    "panel",
+    88,
+    110,
+    165
+   ],
+   [
+    "deploy",
+    24,
+    40,
+    80
+   ]
+  ],
+  "equipo": [
+   [
+    "frontend",
+    "Frontend",
+    4800000,
+    1
+   ],
+   [
+    "backend",
+    "Backend",
+    5600000,
+    1
+   ],
+   [
+    "qa",
+    "QA / pruebas",
+    3900000,
+    1
+   ]
+  ],
+  "tarifas": {
+   "frontend": 45600.0,
+   "backend": 53200.0,
+   "qa": 37050.0
+  },
+  "tarifaCombinada": 45283.333333333336,
+  "cascada": {
+   "totalHoras": 599.97,
+   "contingenciaHoras": 90.0,
+   "horasPlaneadas": 689.97,
+   "manoObra": 27168641.5,
+   "contingenciaCosto": 4075296.22,
+   "noLaboral": 0.0,
+   "subtotal": 31243937.72,
+   "margenCosto": 6248787.54,
+   "precio": 37492725.26,
+   "equivalente": {
+    "usd": 8926.84,
+    "cop": 37492725.26
+   },
+   "roles": [
+    {
+     "id": "frontend",
+     "horas": 199.99,
+     "tarifaHora": 45600.0,
+     "costo": 9119544.0,
+     "pctHoras": 33.3,
+     "pctCosto": 33.6
+    },
+    {
+     "id": "backend",
+     "horas": 199.99,
+     "tarifaHora": 53200.0,
+     "costo": 10639468.0,
+     "pctHoras": 33.3,
+     "pctCosto": 39.2
+    },
+    {
+     "id": "qa",
+     "horas": 199.99,
+     "tarifaHora": 37050.0,
+     "costo": 7409629.5,
+     "pctHoras": 33.3,
+     "pctCosto": 27.3
+    }
+   ],
+   "niveles": {
+    "minimo": {
+     "precio": 29885505.65,
+     "usd": 7115.6,
+     "cop": 29885505.65
+    },
+    "recomendado": {
+     "precio": 37492725.26,
+     "usd": 8926.84,
+     "cop": 37492725.26
+    },
+    "premium": {
+     "precio": 48740542.84,
+     "usd": 11604.89,
+     "cop": 48740542.84
+    }
+   },
+   "capacidad": {
+    "capacidadSemanal": 105.0,
+    "semanas": 6.6,
+    "diasHabiles": 33,
+    "riesgoSobretiempo": 0.66,
+    "nivel": "BAJO"
+   }
+  },
+  "simular": {
+   "horas": {
+    "p50": 630.2,
+    "p80": 661.0,
+    "p90": 677.1,
+    "media": 631.9,
+    "minimo": 536.0,
+    "maximo": 753.9
+   },
+   "costo": {
+    "p50": 28539065.35,
+    "p80": 29933188.37,
+    "p90": 30660049.45,
+    "media": 28612996.19,
+    "minimo": 24269948.95,
+    "maximo": 34140068.8
+   },
+   "semanas": {
+    "p50": 6.0,
+    "p80": 6.3,
+    "p90": 6.4,
+    "media": 6.0,
+    "minimo": 5.1,
+    "maximo": 7.2
+   },
+   "horas_probables": 600,
+   "tareas_simuladas": 6,
+   "presupuesto_con_contingencia": 31243937.72,
+   "prob_dentro_presupuesto": 0.949,
+   "horas_con_contingencia": 690.0,
+   "prob_dentro_horas": 0.949
+  },
+  "lectura": "Con la contingencia actual hay un 95% de probabilidad de no pasarse del presupuesto. La contingencia cubre el P80."
+ }
+}

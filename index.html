@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¿Cuánto cuesta tu software?</title>
+  <meta name="description" content="Arma tu proyecto con piezas, elige tu equipo y mira el rango de costo y plazo (P50, P80, P90) con una simulación Monte Carlo. Valores de referencia editables; no es una cotización formal.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A090A'/%3E%3Ctext x='16' y='24' font-size='22' text-anchor='middle' fill='%23CB433E' font-family='sans-serif'%3E%24%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+  <script>
+    try { const t = localStorage.getItem('cotizador-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="solo-lector" href="#resultado">Saltar al resultado</a>
+  <header class="cabecera trama">
+    <span class="kanji" aria-hidden="true">見積</span>
+    <div class="marca">
+      <h1>¿Cuánto cuesta tu software?</h1>
+      <p>Arma tu proyecto, elige tu equipo y mira el <strong>rango</strong> real, no un número mágico.</p>
+    </div>
+    <div class="acciones">
+      <div class="chip-moneda" role="group" aria-label="Moneda">
+        <button type="button" data-moneda="COP" aria-pressed="true">COP</button>
+        <button type="button" data-moneda="USD" aria-pressed="false">USD</button>
+      </div>
+      <label class="trm" title="Pesos colombianos por 1 dólar. Edítala con la TRM del día.">
+        <span>TRM</span><input id="trm" type="number" min="1" step="1" inputmode="numeric" value="4200" aria-label="Tasa de cambio: pesos por dólar">
+      </label>
+      <button type="button" class="boton" id="tema" aria-label="Cambiar tema claro u oscuro">Tema</button>
+      <a class="boton primario" href="proceso/">Cómo se hizo</a>
+    </div>
+  </header>
+
+  <div class="mini-hud" aria-hidden="true">
+    <span>P80 <b id="mini-precio">…</b></span>
+    <span id="mini-plazo">…</span>
+    <a href="#resultado">ver rango</a>
+  </div>
+
+  <main class="mesa">
+    <div class="col-izq">
+      <section class="panel" aria-labelledby="t-piezas">
+        <h2 id="t-piezas"><span class="paso-num">1</span> Arma tu proyecto <span class="sello" id="sello-ejemplo">Ejemplo: tienda en línea pequeña</span></h2>
+        <p class="ayuda">Toca las piezas que necesita tu software. Cada una trae tres estimaciones de horas (optimista, probable, pesimista).</p>
+        <div class="piezas-grid" id="piezas" role="group" aria-label="Piezas del proyecto"></div>
+        <div class="fila-acciones">
+          <button type="button" class="boton" id="cargar-ejemplo">Cargar ejemplo</button>
+          <button type="button" class="boton" id="vaciar">Vaciar</button>
+        </div>
+        <details class="ajuste" id="ajuste">
+          <summary>Ajustar horas de las piezas elegidas</summary>
+          <p class="ayuda">Horas de trabajo de todo el equipo. <span class="origen eco">EC</span> = horas probables del modelo de optimización (caso «pequeña»), rango −20 %/+50 % del motor de riesgo. <span class="origen propio">SP</span> = supuesto propio de esta herramienta.</p>
+          <div class="tabla-scroll">
+            <table class="tabla">
+              <thead><tr><th scope="col">Pieza</th><th scope="col">Optimista</th><th scope="col">Probable</th><th scope="col">Pesimista</th></tr></thead>
+              <tbody id="tabla-horas"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel" aria-labelledby="t-equipo">
+        <h2 id="t-equipo"><span class="paso-num">2</span> Elige tu equipo <span class="sello frio">Nómina Colombia</span></h2>
+        <p class="ayuda">Salario mensual en COP. El costo por hora incluye prestaciones (52 %) y auxilio de transporte si gana menos de 2 SMMLV.</p>
+        <div class="equipo-lista" id="equipo"></div>
+      </section>
+
+      <details class="panel supuestos" id="supuestos">
+        <summary><h2 style="display:inline-flex"><span class="paso-num">%</span> Supuestos y parámetros</h2></summary>
+        <p class="ayuda">Valores de referencia que debes verificar contra la norma vigente: SMMLV, auxilio y jornada cambian cada año.</p>
+        <div class="rejilla">
+          <label>Factor prestacional (%)<input type="number" data-param="factorPrestacional" data-escala="100" min="0" max="199" step="1"></label>
+          <label>SMMLV (COP)<input type="number" data-param="smmlv" min="0" step="1000"></label>
+          <label>Auxilio de transporte (COP/mes)<input type="number" data-param="auxilioTransporte" min="0" step="1000"></label>
+          <label>Auxilio si gana menos de (SMMLV)<input type="number" data-param="limiteAuxilioSmmlv" min="0" step="0.5"></label>
+          <label>Horas pagadas por semana<input type="number" data-param="horasSemana" min="1" step="1"></label>
+          <label>Semanas por mes<input type="number" data-param="semanasMes" min="1" step="0.01"></label>
+          <label>Horas productivas por persona y semana<input type="number" data-param="horasProductivas" min="1" step="1"></label>
+          <label>Contingencia (%)<input type="number" data-param="contingencia" data-escala="100" min="0" max="100" step="1"></label>
+          <label>Margen comercial (%)<input type="number" data-param="margen" data-escala="100" min="0" max="200" step="1"></label>
+          <label>Otros costos fijos (COP: hosting, licencias)<input type="number" data-param="otrosCostos" min="0" step="100000"></label>
+          <label>Distribución<select data-param="distribucion"><option value="pert">Beta-PERT</option><option value="triangular">Triangular</option></select></label>
+          <label>Iteraciones Monte Carlo<input type="number" data-param="iteraciones" min="100" max="100000" step="500"></label>
+          <label>Semilla<input type="number" data-param="semilla" min="0" step="1"></label>
+        </div>
+        <div class="fila-acciones"><button type="button" class="boton" id="restaurar">Restaurar valores de referencia</button></div>
+      </details>
+    </div>
+
+    <section class="panel resultado" id="resultado" aria-labelledby="t-resultado" tabindex="-1">
+      <span class="onoma" id="onoma" aria-hidden="true">×5000</span>
+      <h2 id="t-resultado"><span class="paso-num">3</span> El rango</h2>
+      <div id="salida" aria-live="polite">
+        <div class="hud-precio">
+          <span class="hud-etiqueta" id="etq-precio">Precio con 80 % de confianza (P80)</span>
+          <span class="hud-grande num" id="precio-p80">…</span>
+          <span class="hud-rango" id="precio-rango">…</span>
+        </div>
+        <div class="hud-etiqueta" title="Semanas planeadas frente a un umbral de 10 semanas (regla de eiran)">Plazo en semanas · riesgo de sobretiempo <span class="nivel" id="nivel">…</span></div>
+        <div class="hud-fila">
+          <div class="hud-caja"><div class="e">Plazo P50</div><div class="v" id="sem-p50">…</div></div>
+          <div class="hud-caja"><div class="e">Plazo P80</div><div class="v" id="sem-p80">…</div></div>
+          <div class="hud-caja"><div class="e">Plazo P90</div><div class="v" id="sem-p90">…</div></div>
+        </div>
+        <div class="medidor">
+          <div class="hud-etiqueta">¿Alcanza el presupuesto con contingencia?</div>
+          <div class="barra" role="meter" id="medidor" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Probabilidad de no pasarse del presupuesto con contingencia">
+            <div class="relleno" id="medidor-relleno"></div><div class="marca80" title="Meta: 80 %"></div>
+          </div>
+          <p id="lectura">…</p>
+        </div>
+      </div>
+      <svg class="histo" id="histo" viewBox="0 0 600 230" role="img" aria-labelledby="histo-titulo histo-desc">
+        <title id="histo-titulo">Distribución del costo simulado</title>
+        <desc id="histo-desc">Histograma de los escenarios simulados.</desc>
+      </svg>
+      <div class="leyenda" aria-hidden="true">
+        <span><i style="background:var(--frio)"></i>escenarios dentro del presupuesto</span>
+        <span><i style="background:var(--acento)"></i>escenarios que se pasan</span>
+        <span>- - - P50 · P80 · P90</span>
+      </div>
+      <details class="desglose" id="desglose">
+        <summary>Desglose (con las horas probables)</summary>
+        <div id="desglose-cuerpo"></div>
+      </details>
+      <p class="aviso-legal">No es una cotización formal: son valores de referencia a verificar. Precio = costo simulado × (1 + margen).</p>
+    </section>
+  </main>
+
+  <footer class="pie trama">
+    <span class="creditos">Mario Puerta × <a href="https://www.linkedin.com/in/davidalexanderrinconcorredorkuronoma/" rel="noopener">David Rincón «Kuronoma»</a></span>
+    <a href="https://github.com/ale0009" rel="noopener">github.com/ale0009</a>
+    <a href="#">Portafolio</a>
+    <a href="proceso/">Cómo se hizo</a>
+  </footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
