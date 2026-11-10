@@ -10,8 +10,8 @@ import { redondear } from './redondeo.js';
 
 export const NOMINA_REFERENCIA = Object.freeze({
   factorPrestacional: 0.52, // prima, cesantías e intereses, vacaciones, salud, pensión, ARL, parafiscales
-  smmlv: 1_423_500, // COP, valor de referencia parametrizable
-  auxilioTransporte: 200_000, // COP/mes, valor de referencia
+  smmlv: 1_750_905, // COP 2026, Decreto 1469 de 2025 (verificado el 10 nov 2026)
+  auxilioTransporte: 249_095, // COP/mes 2026, Decreto 1470 de 2025
   limiteAuxilioSmmlv: 2, // se paga si el salario es menor que 2 SMMLV
   horasSemana: 40,
   semanasMes: 4,

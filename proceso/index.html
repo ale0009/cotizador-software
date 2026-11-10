@@ -55,7 +55,7 @@
       <h3>La nómina colombiana</h3>
       <p>Contratar a alguien cuesta más que su salario. El factor prestacional (≈52 %, ilustrativo) agrupa prima, cesantías e intereses, vacaciones, salud, pensión, ARL y parafiscales. Si la persona gana menos de dos salarios mínimos, además se paga auxilio de transporte.</p>
       <p class="formula">costo_hora = (salario × (1 + 0,52) + auxilio si salario &lt; 2 SMMLV) / 160 h<br>Backend 5.600.000 → 5.600.000 × 1,52 / 160 = 53.200 COP/h</p>
-      <p class="ayuda">Valores de referencia de los dos repositorios: SMMLV 1.423.500, auxilio 200.000, 40 h × 4 semanas. Cambian cada año: en la herramienta todos son editables.</p>
+      <p class="ayuda">Los repositorios originales usaban los valores de 2025 (SMMLV 1.423.500, auxilio 200.000). La herramienta usa los de 2026: SMMLV 1.750.905 (Decreto 1469 de 2025) y auxilio 249.095 (Decreto 1470 de 2025), verificados el 10 nov 2026; jornada de 40 h × 4 semanas. Cambian cada año: en la herramienta todos son editables.</p>
 
       <h3>El motor de eiran</h3>
       <p>eiran es un asistente propio de Mario para evaluar la viabilidad de proyectos. De su módulo de presupuesto se portaron a JavaScript tres piezas: <code>costo_laboral.py</code> (costo por hora para la empresa), <code>riesgo.py</code> (Monte Carlo con PERT y percentiles) y <code>cascade_engine.py</code> (contingencia, margen comercial, niveles de precio, capacidad y conversión de moneda). Las pruebas (<code>node --test</code>) comparan el resultado JavaScript con valores calculados ejecutando el Python original: el ejemplo precargado da el mismo P50, P80 y P90.</p>

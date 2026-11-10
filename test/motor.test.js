@@ -40,7 +40,9 @@ test('redondear imita round() de Python (mitades al par)', () => {
 });
 
 test('costoHoraEmpresa = costo_hora_empresa de eiran', () => {
-  for (const c of REF.costo_hora_empresa) assert.equal(costoHoraEmpresa(c.salario, c.opciones), c.esperado, `salario ${c.salario}`);
+  // Las referencias se generaron con los valores 2025 (SMMLV 1.423.500, auxilio 200.000): se pasan explícitos.
+  const V2025 = { smmlv: 1_423_500, auxilioTransporte: 200_000 };
+  for (const c of REF.costo_hora_empresa) assert.equal(costoHoraEmpresa(c.salario, { ...V2025, ...(c.opciones || {}) }), c.esperado, `salario ${c.salario}`);
   assert.throws(() => costoHoraEmpresa(0));
   assert.throws(() => costoHoraEmpresa(1e6, { factorPrestacional: 2 }));
 });
